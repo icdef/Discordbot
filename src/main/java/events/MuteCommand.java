@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * !mute @target [reason]
+ * !mute @targets [reason]
  * Author command which can Servermute and text restrict another user.
  * Also writes a log with reason when given into a separate channel
  */
@@ -43,12 +43,16 @@ public class MuteCommand extends Commandsyntax {
                 return;
             }
 
-            Member target = event.getMessage().getMentionedMembers().get(0);
-            Role muted = event.getGuild().getRoleById("676042399981502474");
-            event.getGuild().addRoleToMember(target, muted).queue();
-            if (!target.isOwner())
-                target.mute(true).queue();
-
+            List<Member> target = event.getMessage().getMentionedMembers();
+           // Role muted = event.getGuild().getRoleById("676042399981502474");
+             Role muted = event.getGuild().getRolesByName("muted",true).get(0);
+            if (muted == null)
+                return;
+            for (Member m : target) {
+                event.getGuild().addRoleToMember(m, muted).queue();
+                if (!m.isOwner())
+                    m.mute(true).queue();
+            }
             String reason = "";
             if (input.length > 2) {  // user specified a reason
                 for (int i = 2; i < input.length; i++) {
@@ -56,7 +60,8 @@ public class MuteCommand extends Commandsyntax {
                 }
 
             }
-            log(target, event.getMember(), reason, event.getGuild().getTextChannelById("676052219141029938"));
+            if (event.getGuild().getTextChannelById("676052219141029938") != null)
+                log(target.get(0), event.getMember(), reason, event.getGuild().getTextChannelById("676052219141029938"));
         }
 
 

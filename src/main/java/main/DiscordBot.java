@@ -22,14 +22,11 @@ public class DiscordBot {
     public static void main(String[] args) throws Exception {
          ArrayList<AllCommands> COMMANDS = new ArrayList<>();
          JDA jda = new JDABuilder(AccountType.BOT)
-                .setToken("XYZ")
+                .setToken("")
                 .build();
-
         Shut shut = new Shut(jda);
         Thread t1 = new Thread(shut);
         t1.start();
-
-        //adding commands into the bot and List
 
         jda.addEventListener(new HelloThere());
 

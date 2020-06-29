@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * !unmute @target
+ * !unmute @targets
  * redoes the !mute command
  */
 public class UnmuteCommand extends Commandsyntax {
@@ -37,11 +37,19 @@ public class UnmuteCommand extends Commandsyntax {
                 event.getChannel().sendMessage("U need to target the user").queue();
                 return;
             }
-                Member target = event.getMessage().getMentionedMembers().get(0);
-                Role muted = event.getGuild().getRoleById("676042399981502474");
-                target.mute(false).queue();
-                event.getGuild().removeRoleFromMember(target,muted).queue();
-                event.getGuild().getTextChannelById("676052219141029938").sendMessage(event.getAuthor().getName()+" unmuted "+
+                List<Member> target = event.getMessage().getMentionedMembers();
+               // Role muted = event.getGuild().getRoleById("676042399981502474");
+            Role muted = event.getGuild().getRolesByName("muted",true).get(0);
+
+            for (Member m : target) {
+                if (muted == null)
+                    return;
+                m.mute(false).queue();
+                event.getGuild().removeRoleFromMember(m,muted).queue();
+            }
+
+                if (event.getGuild().getTextChannelById("676052219141029938") != null)
+                    event.getGuild().getTextChannelById("676052219141029938").sendMessage(event.getAuthor().getName()+" unmuted "+
                         event.getMessage().getMentionedMembers().get(0).getUser().getAsMention()).queue();
         }
 

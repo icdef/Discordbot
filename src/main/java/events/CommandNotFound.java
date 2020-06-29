@@ -17,6 +17,8 @@ public class CommandNotFound extends Commandsyntax {
     public void onGuildMessageReceived(GuildMessageReceivedEvent event){
         boolean found = false;
         String[] input = event.getMessage().getContentRaw().split(" ");
+        if (input.length == 0)
+            return;
         if  (!event.getMember().getUser().isBot() && input[0].charAt(0) == PREFIX ){
             for (AllCommands c: ac){
                 if (c.getCommand().compareTo(input[0].substring(1)) == 0){ //look for command

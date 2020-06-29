@@ -13,6 +13,12 @@ public abstract class Commandsyntax extends ListenerAdapter {
         return input.compareTo(PREFIX+command) == 0;
     }
 
+    /**
+     * checks if event got triggerd by bot or if bot is in a voice channel
+     * @param event
+     * @param audioManager
+     * @return boolean
+     */
     public boolean IsBotInChannel(GuildMessageReceivedEvent event, AudioManager audioManager){
 
         //checks if event got triggerd by bot
