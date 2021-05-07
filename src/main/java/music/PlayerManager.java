@@ -58,10 +58,7 @@ public class PlayerManager {
                 boolean once = true;
                 List<AudioTrack> audioTrackList = audioPlaylist.getTracks();
                 for (AudioTrack track : audioTrackList){
-                    if (once)
-                        musicManager.scheduler.queuePlaylist(track,audioPlaylist,true);
-                    else
-                        musicManager.scheduler.queuePlaylist(track,audioPlaylist,false);
+                    musicManager.scheduler.queuePlaylist(track,audioPlaylist, once);
                     once = false;
                 }
 

@@ -41,9 +41,12 @@ public class PlayCommand extends Commandsyntax {
             event.getChannel().sendMessage("Joining your voice channel").queue();
 
         PlayerManager manager = PlayerManager.getInstance(event.getChannel());
-        GuildMusicManager guildMusicManager = manager.getMusicManager(event.getGuild());
-        audioManager.setSendingHandler(guildMusicManager.getSendHandler());
-        manager.loadandPlay(event.getChannel(),url);
+        try {
+            manager.loadandPlay(event.getChannel(), url);
+        }
+        catch (Exception ex) {
+            event.getChannel().sendMessage(ex.getMessage()).queue();
+        }
 
     }
 }

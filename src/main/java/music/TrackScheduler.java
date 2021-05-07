@@ -52,7 +52,7 @@ public class TrackScheduler extends AudioEventAdapter {
             return;
         }
 
-        channel.sendMessage("Adding to queue: "+track.getInfo().title+"\nPlaying now: "+track.getInfo().title).queue();
+        channel.sendMessage("Playing now: "+track.getInfo().title).queue();
     }
 
     public void queuePlaylist(AudioTrack track, AudioPlaylist playlist,boolean once) {
