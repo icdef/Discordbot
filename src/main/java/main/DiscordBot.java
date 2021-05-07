@@ -7,9 +7,6 @@ import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 /**
@@ -21,11 +18,9 @@ public class DiscordBot {
 
     public static void main(String[] args) throws Exception {
          ArrayList<AllCommands> COMMANDS = new ArrayList<>();
-         JDA jda = new JDABuilder(AccountType.BOT)
-                .setToken("")
-                .build();
-        Shut shut = new Shut(jda);
-        Thread t1 = new Thread(shut);
+         JDABuilder jdaBuilder = JDABuilder.createDefault("");
+         JDA jda = jdaBuilder.build();
+        Thread t1 = new Thread(new Shut(jda));
         t1.start();
 
         jda.addEventListener(new HelloThere());
@@ -90,33 +85,3 @@ public class DiscordBot {
 }
 
 
-/**
- * Thread which listens to System.in and shuts down the bot when writing 'exit' into console
- */
- class Shut implements Runnable {
-    private JDA jda;
-    public Shut (JDA jda){
-        this.jda = jda;
-    }
-    @Override
-    public void run() {
-        System.out.println("Bot is on");
-        String line = "";
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        try {
-            while ((line = reader.readLine()) != null) {
-                if (line.equalsIgnoreCase("exit")) {
-                    jda.shutdown();
-                    System.out.println("Bot is off");
-                    reader.close();
-                    break;
-                } else {
-                    System.out.println("Use 'exit' to shutdown");
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.exit(0);
-    }
-}
