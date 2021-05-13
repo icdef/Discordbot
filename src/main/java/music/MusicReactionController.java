@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
 import java.util.Deque;
 import java.util.Objects;
 
-public class MusicControler extends ListenerAdapter {
+public class MusicReactionController extends ListenerAdapter {
 
     @Override
     public void onMessageReactionAdd(@Nonnull MessageReactionAddEvent event){
@@ -55,10 +55,21 @@ public class MusicControler extends ListenerAdapter {
         if (playMessages.peek() == null)
             return;
         if (playMessages.peek().getIdLong() == event.getMessageIdLong()){
-            switch (event.getReaction().getReactionEmote().getAsCodepoints().toLowerCase()){
-                case "u+23ef":
+
+            switch (event.getReaction().getReactionEmote().getAsCodepoints().toUpperCase()){
+                case "U+23EF":
                     guildMusicManager.player.setPaused(!guildMusicManager.player.isPaused());
                     break;
+                case "U+23ED":
+                    guildMusicManager.scheduler.nextTrack(true);
+                    break;
+                case "U+1F500":
+                    guildMusicManager.scheduler.shuffleQueue();
+                    break;
+                case "U+23F9":
+                    guildMusicManager.scheduler.stopAndReset();
+                    break;
+
             }
 
         }
