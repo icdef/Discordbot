@@ -9,35 +9,38 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class PlayerManager {
     private static PlayerManager INSTANCE;
-    private final AudioPlayerManager playerManager;
+    private AudioPlayerManager audioPlayerManager;
     private TextChannel channel;
-    private final Map<Long,GuildMusicManager> musicManagers;
+    private Map<Long,GuildMusicManager> musicManagers;
+    private Deque<Message> playMessages = new ArrayDeque<>();
 
 
-    public PlayerManager(TextChannel channel){
-        this.playerManager = new DefaultAudioPlayerManager();
+    private PlayerManager(TextChannel channel){
+        this.audioPlayerManager = new DefaultAudioPlayerManager();
         this.musicManagers = new HashMap<>();
-        AudioSourceManagers.registerRemoteSources(playerManager); //play remote files
-        AudioSourceManagers.registerLocalSource(playerManager); //play local files
+        AudioSourceManagers.registerRemoteSources(audioPlayerManager); //play remote files
+        AudioSourceManagers.registerLocalSource(audioPlayerManager); //play local files
         this.channel = channel;
     }
 
+    public Deque<Message> getPlayMessages() {
+        return playMessages;
+    }
 
 
     public synchronized GuildMusicManager getMusicManager(Guild guild) {
         long guildId = guild.getIdLong();
         GuildMusicManager musicManager = musicManagers.get(guildId);
         if (musicManager == null){
-            musicManager = new GuildMusicManager(playerManager, channel);
+            musicManager = new GuildMusicManager(audioPlayerManager, channel, playMessages);
             musicManagers.put(guildId, musicManager);
         }
         guild.getAudioManager().setSendingHandler(musicManager.getSendHandler());
@@ -46,7 +49,7 @@ public class PlayerManager {
 
     public void loadandPlay(TextChannel channel, String trackUrl){
         GuildMusicManager musicManager = getMusicManager(channel.getGuild());
-        playerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
+        audioPlayerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
 
             @Override
             public void trackLoaded(AudioTrack audioTrack) {
@@ -84,6 +87,8 @@ public class PlayerManager {
     public static synchronized PlayerManager getInstance(TextChannel channel){
         if (INSTANCE == null)
             INSTANCE = new PlayerManager(channel);
+        INSTANCE.channel = channel;
         return INSTANCE;
     }
+
 }

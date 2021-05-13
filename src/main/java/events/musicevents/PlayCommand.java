@@ -4,13 +4,17 @@ package events.musicevents;
 import main.Commandsyntax;
 import music.GuildMusicManager;
 import music.PlayerManager;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.managers.AudioManager;
 
 import javax.annotation.Nonnull;
+import java.util.Stack;
 
 public class PlayCommand extends Commandsyntax {
+
+    @Override
     public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent event) {
 
         if (event.getAuthor().isBot()) return;
@@ -36,9 +40,11 @@ public class PlayCommand extends Commandsyntax {
             return;
         }
 
-        audioManager.openAudioConnection(channel);
-        if(!audioManager.isConnected())
+
+        if(!audioManager.isConnected()) {
+            audioManager.openAudioConnection(channel);
             event.getChannel().sendMessage("Joining your voice channel").queue();
+        }
 
         PlayerManager manager = PlayerManager.getInstance(event.getChannel());
         try {

@@ -18,17 +18,15 @@ public class PauseCommand extends Commandsyntax {
 
         if(IsBotInChannel(event,audioManager))return;
 
-        PlayerManager playerManager = PlayerManager.getInstance(event.getChannel());
+        PlayerManager playerManager = PlayerManager.getInstance(channel);
         GuildMusicManager guildMusicManager = playerManager.getMusicManager(event.getGuild());
         if (guildMusicManager.player.getPlayingTrack() == null)
             return;
         if (guildMusicManager.player.isPaused()) {
-            channel.sendMessage("Unpaused").queue();
             guildMusicManager.player.setPaused(false);
         }
         else {
             guildMusicManager.player.setPaused(true);
-            channel.sendMessage("Paused").queue();
         }
     }
 }

@@ -18,9 +18,9 @@ public class ShuffleCommand extends Commandsyntax {
         AudioManager audioManager = event.getGuild().getAudioManager();
         if(IsBotInChannel(event,audioManager))return;
 
-        PlayerManager playerManager = PlayerManager.getInstance(event.getChannel());
+        PlayerManager playerManager = PlayerManager.getInstance(channel);
         GuildMusicManager guildMusicManager = playerManager.getMusicManager(event.getGuild());
-        guildMusicManager.scheduler.ShuffleQueue();
-        channel.sendMessage("Queue shuffled").queue();
+        guildMusicManager.scheduler.shuffleQueue();
+
     }
 }

@@ -4,11 +4,13 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Emote;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -19,6 +21,7 @@ public class TrackScheduler extends AudioEventAdapter {
     private  AudioPlayer player;
     private  BlockingQueue<AudioTrack> queue;
     private TextChannel channel;
+    private Deque<Message> playMessages;
 
 
     /**
@@ -28,15 +31,26 @@ public class TrackScheduler extends AudioEventAdapter {
         this.player = player;
         this.queue = new LinkedBlockingQueue<>();
     }
-    public TrackScheduler(AudioPlayer player, TextChannel channel){
+    public TrackScheduler(AudioPlayer player, TextChannel channel, Deque<Message> playMessages){
         this.player = player;
         this.queue = new LinkedBlockingQueue<>();
         this.channel = channel;
+        this.playMessages = playMessages;
 
     }
 
-
-
+    private void removeReactionsFromLatesMusicBotMessage(Deque<Message> stack) {
+        if (stack.peek() != null) {
+            Message removeIt = stack.pop();
+            removeIt.clearReactions().queue();
+        }
+    }
+    private void addReactionsToMessage(Message msg) {
+        msg.addReaction("U+23EF").queue();
+        msg.addReaction("U+23ED").queue();
+        msg.addReaction("U+1F500").queue();
+        msg.addReaction("U+23F9").queue();
+    }
     /**
      * Add the next track to queue or play right away if nothing is in the queue.
      *
@@ -47,33 +61,43 @@ public class TrackScheduler extends AudioEventAdapter {
         // something is playing, it returns false and does nothing. In that case the player was already playing so this
         // track goes to the queue instead.
         if (!player.startTrack(track, true)) {
-            channel.sendMessage("Adding to queue: " +track.getInfo().title).queue();
+            removeReactionsFromLatesMusicBotMessage(playMessages);
+            Message message1 = new MessageBuilder("Adding to queue: " +track.getInfo().title).build();
+            channel.sendMessage(message1).queue(msg -> {addReactionsToMessage(msg); playMessages.push(msg);});
             queue.offer(track);
             return;
         }
+        Message message = new MessageBuilder().append("Playing now: ").append(track.getInfo().title).build();
+        channel.sendMessage(message).queue(msg -> {addReactionsToMessage(msg); playMessages.push(msg);});
 
-        channel.sendMessage("Playing now: "+track.getInfo().title).queue();
+
     }
 
     public void queuePlaylist(AudioTrack track, AudioPlaylist playlist,boolean once) {
         // Calling startTrack with the noInterrupt set to true will start the track only if nothing is currently playing. If
         // something is playing, it returns false and does nothing. In that case the player was already playing so this
         // track goes to the queue instead.
+        removeReactionsFromLatesMusicBotMessage(playMessages);
         if (!player.startTrack(track, true)) {
-            if (once)
-                channel.sendMessage("Adding "+playlist.getTracks().size()+" Songs").queue();
+            if (once) {
+                Message message = new MessageBuilder("Adding " + playlist.getTracks().size() + " Songs").build();
+                channel.sendMessage(message).queue(msg -> {addReactionsToMessage(msg);playMessages.push(msg);});
+            }
             queue.offer(track);
             return;
         }
-
-        channel.sendMessage("Adding "+playlist.getTracks().size()+" Songs\nPlaying now: "+track.getInfo().title).queue();
+        Message message = new MessageBuilder("Adding "+playlist.getTracks().size()+" Songs\nPlaying now: "+track.getInfo().title).build();
+        channel.sendMessage(message).queue(msg -> {addReactionsToMessage(msg);playMessages.push(msg);});
     }
 
     public BlockingQueue<AudioTrack> getQueue() {
         return queue;
     }
 
-    public void ShuffleQueue(){
+    public void shuffleQueue(){
+        removeReactionsFromLatesMusicBotMessage(playMessages);
+        Message message = new MessageBuilder("Queue shuffled").build();
+        channel.sendMessage(message).queue(msg -> {addReactionsToMessage(msg);playMessages.push(msg);});
         List<AudioTrack> tracks = new ArrayList<>(queue);
         Collections.shuffle(tracks);
         queue = new LinkedBlockingQueue<>(tracks);
@@ -82,15 +106,26 @@ public class TrackScheduler extends AudioEventAdapter {
     /**
      * Start the next track, stopping the current one if it is playing.
      */
-    public void nextTrack(boolean skipped) {
+    public void nextTrack(boolean isSkipping) {
         // Start the next track, regardless of if something is already playing or not. In case queue was empty, we are
         // giving null to startTrack, which is a valid argument and will simply stop the player.
-        AudioTrack nexttrack = queue.peek();
-        if (nexttrack != null) {
-            if(!skipped)
-                channel.sendMessage("Playing now: " + nexttrack.getInfo().title).queue();
-            else
-                channel.sendMessage("Skipped Song\nPlaying now: " + nexttrack.getInfo().title).queue();
+        AudioTrack nextTrack = queue.peek();
+        removeReactionsFromLatesMusicBotMessage(playMessages);
+        if (player.isPaused())
+            player.setPaused(false);
+
+        if (nextTrack != null) {
+        Message message = new MessageBuilder().append("Playing now: ").append(nextTrack.getInfo().title).build();
+        Message message1 = new MessageBuilder().append("Skipped Song\nPlaying now: ").append(nextTrack.getInfo().title).build();
+            if(!isSkipping) {
+                channel.sendMessage(message).queue(msg -> {addReactionsToMessage(msg); playMessages.push(msg);});
+
+            }
+
+            else {
+                channel.sendMessage(message1).queue(msg -> {addReactionsToMessage(msg); playMessages.push(msg);});
+
+            }
         }
         player.startTrack(queue.poll(), false);
     }
@@ -103,6 +138,14 @@ public class TrackScheduler extends AudioEventAdapter {
         if (endReason.mayStartNext) {
             nextTrack(false);
         }
+    }
+    public void stopAndReset(){
+        queue.clear();
+        playMessages.clear();
+        player.stopTrack();
+        player.setPaused(false);
+        Message message = new MessageBuilder("Music stopped and queue cleared").build();
+        channel.sendMessage(message).queue();
     }
 
 }
