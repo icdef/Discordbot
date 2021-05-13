@@ -3,7 +3,7 @@ package main;
 
 import events.*;
 import events.musicevents.*;
-import music.MusicControler;
+import music.MusicReactionController;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -21,7 +21,8 @@ public class DiscordBot {
         ArrayList<AllCommands> COMMANDS = new ArrayList<>();
         ListenerAdapter[] adapters = {new HelloThere(), new OnlineCommand(), new CommandNotFound(COMMANDS), new HelpCommand(COMMANDS)
                 , new DateCommand(), new ClearCommand(), new MuteCommand(), new UnmuteCommand(), new JoinCommand(), new LeaveCommand(), new StopCommand(),
-                new SkipCommand(), new PlayCommand(), new ShuffleCommand(), new PauseCommand(), new MusicControler()};
+                new SkipCommand(), new PlayCommand(), new ShuffleCommand(), new PauseCommand(), new MusicReactionController()};
+
         JDABuilder jdaBuilder = JDABuilder.createDefault("");
         JDA jda = jdaBuilder.build();
         Thread t1 = new Thread(new Shut(jda));
