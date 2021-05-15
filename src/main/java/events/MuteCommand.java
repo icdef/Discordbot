@@ -1,6 +1,6 @@
 package events;
 
-import main.Commandsyntax;
+import main.CommandSyntax;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
@@ -20,20 +20,20 @@ import java.util.concurrent.TimeUnit;
  * Also writes a log with reason when given into a separate channel
  */
 
-public class MuteCommand extends Commandsyntax {
+public class MuteCommand extends CommandSyntax {
 
     public void onGuildMessageReceived(GuildMessageReceivedEvent event){
         if (event.getAuthor().isBot()) return;
 
         String[] input = event.getMessage().getContentRaw().split(" ");
         if (!event.getMember().isOwner()){ //who is allowed to use
-            if (!checkcommand(input[0],"mute"))
+            if (!checkCommand(input[0],"mute"))
                 return;
             event.getChannel().sendMessage("Only Owner can mute. Sorry star").queue();
             return;
         }
 
-        if (checkcommand(input[0],"mute")){
+        if (checkCommand(input[0],"mute")){
             if (input.length < 2){ //user is missing
                 sendErrorMessage(event.getChannel(),event.getMember());
                 return;

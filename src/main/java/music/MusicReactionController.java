@@ -1,7 +1,6 @@
 package music;
 
-import music.GuildMusicManager;
-import music.PlayerManager;
+
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
@@ -35,6 +34,7 @@ public class MusicReactionController extends ListenerAdapter {
                     guildMusicManager.scheduler.shuffleQueue();
                     break;
                 case "U+23F9":
+                    playMessages.pop().clearReactions().queue();
                     guildMusicManager.scheduler.stopAndReset();
                     break;
 
@@ -60,14 +60,8 @@ public class MusicReactionController extends ListenerAdapter {
                 case "U+23EF":
                     guildMusicManager.player.setPaused(!guildMusicManager.player.isPaused());
                     break;
-                case "U+23ED":
-                    guildMusicManager.scheduler.nextTrack(true);
-                    break;
                 case "U+1F500":
                     guildMusicManager.scheduler.shuffleQueue();
-                    break;
-                case "U+23F9":
-                    guildMusicManager.scheduler.stopAndReset();
                     break;
 
             }

@@ -1,16 +1,16 @@
 package events.musicevents;
 
 
-import main.Commandsyntax;
+import main.CommandSyntax;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.managers.AudioManager;
 
-public class JoinCommand extends Commandsyntax {
+public class JoinCommand extends CommandSyntax {
     public void onGuildMessageReceived(GuildMessageReceivedEvent event){
         if (event.getAuthor().isBot()) return;
         String[] input = event.getMessage().getContentRaw().split(" ");
-        if (!checkcommand(input[0],"join")) return;
+        if (!checkCommand(input[0],"join")) return;
         VoiceChannel channel = event.getMember().getVoiceState().getChannel();
         AudioManager audioManager = event.getGuild().getAudioManager();
 

@@ -1,6 +1,6 @@
 package events;
 
-import main.Commandsyntax;
+import main.CommandSyntax;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  * !unmute @targets
  * redoes the !mute command
  */
-public class UnmuteCommand extends Commandsyntax {
+public class UnmuteCommand extends CommandSyntax {
 
     public void onGuildMessageReceived(GuildMessageReceivedEvent event){
         if (event.getAuthor().isBot()) return;
@@ -21,14 +21,14 @@ public class UnmuteCommand extends Commandsyntax {
 
         String[] input = event.getMessage().getContentRaw().split(" ");
         if (!event.getMember().isOwner()){ //who is allowed to use
-            if (!checkcommand(input[0],"unmute"))
+            if (!checkCommand(input[0],"unmute"))
                 return;
             event.getChannel().sendMessage("Only Owner can Unmute. Sorry star").queue();
             return;
         }
 
 
-        if (checkcommand(input[0],"unmute")) {
+        if (checkCommand(input[0],"unmute")) {
             if (input.length < 2) { //user is missing
                 event.getChannel().sendMessage("Forgot to mark User").complete().delete().queueAfter(5, TimeUnit.SECONDS);
                 return;

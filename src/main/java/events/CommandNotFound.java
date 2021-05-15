@@ -1,6 +1,6 @@
 package events;
 
-import main.Commandsyntax;
+import main.CommandSyntax;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 /**
  * When someone uses "!" as prefix and tries a command which is not implemented write a message into eventchannel
@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.util.ArrayList;
 
-public class CommandNotFound extends Commandsyntax {
+public class CommandNotFound extends CommandSyntax {
     private ArrayList<AllCommands> ac;
     public CommandNotFound (ArrayList<AllCommands> ac){
         this.ac = ac;

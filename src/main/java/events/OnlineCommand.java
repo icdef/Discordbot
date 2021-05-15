@@ -1,6 +1,6 @@
 package events;
 
-import main.Commandsyntax;
+import main.CommandSyntax;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -12,7 +12,7 @@ import java.util.List;
  * !online
  * Displays all members whoes Status is Online
  */
-public class OnlineCommand extends Commandsyntax {
+public class OnlineCommand extends CommandSyntax {
 
     public void onGuildMessageReceived(GuildMessageReceivedEvent event){
 
@@ -20,7 +20,7 @@ public class OnlineCommand extends Commandsyntax {
         int nrmembers = event.getGuild().getMembers().size()-1; //wegen bot
         int onlinemembers = 0;
         String[] input = event.getMessage().getContentRaw().split(" ");
-        if (checkcommand(input[0],"online")&&!event.getMember().getUser().isBot()){
+        if (checkCommand(input[0],"online")&&!event.getMember().getUser().isBot()){
             StringBuilder memberstring = new StringBuilder();
             for (Member m : members){
                 if ((!m.getUser().isBot()) && m.getOnlineStatus() == OnlineStatus.ONLINE) {

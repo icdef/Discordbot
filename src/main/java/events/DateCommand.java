@@ -1,6 +1,6 @@
 package events;
 
-import main.Commandsyntax;
+import main.CommandSyntax;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.time.LocalDateTime;
@@ -10,12 +10,12 @@ import java.time.format.DateTimeFormatter;
  * !date
  * Sends Date into event channel with !date
  */
-public class DateCommand extends Commandsyntax {
+public class DateCommand extends CommandSyntax {
 
     public void onGuildMessageReceived(GuildMessageReceivedEvent event){
         if (event.getAuthor().isBot()) return;
         String[] input = event.getMessage().getContentRaw().split(" ");
-        if (checkcommand(input[0],"date") && !event.getMember().getUser().isBot()){
+        if (checkCommand(input[0],"date") && !event.getMember().getUser().isBot()){
             LocalDateTime dateTime = LocalDateTime.now();
             DateTimeFormatter format = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
             String formatedDateTime = dateTime.format(format);

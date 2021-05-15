@@ -1,18 +1,15 @@
 package events.musicevents;
 
 
-import main.Commandsyntax;
-import music.GuildMusicManager;
+import main.CommandSyntax;
 import music.PlayerManager;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.managers.AudioManager;
 
 import javax.annotation.Nonnull;
-import java.util.Stack;
 
-public class PlayCommand extends Commandsyntax {
+public class PlayCommand extends CommandSyntax {
 
     @Override
     public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent event) {
@@ -21,7 +18,7 @@ public class PlayCommand extends Commandsyntax {
         AudioManager audioManager = event.getGuild().getAudioManager();
         VoiceChannel channel = event.getMember().getVoiceState().getChannel();
         String[] input = event.getMessage().getContentRaw().split(" ");
-        if (!checkcommand(input[0], "play")) return;
+        if (!checkCommand(input[0], "play")) return;
         if (input.length < 2){
             event.getChannel().sendMessage("Provide Link").queue();
             return;

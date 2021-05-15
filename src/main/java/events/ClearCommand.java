@@ -1,6 +1,6 @@
 package events;
 
-import main.Commandsyntax;
+import main.CommandSyntax;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageHistory;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  * !clear number
  * command to delete a number of messages (between 1 and 99) Messages at one call
  */
-public class ClearCommand extends Commandsyntax {
+public class ClearCommand extends CommandSyntax {
 
     @Override
     public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent event) {
@@ -25,7 +25,7 @@ public class ClearCommand extends Commandsyntax {
 
         String[] input = event.getMessage().getContentRaw().split(" ");
 
-        if (checkcommand(input[0],"clear")){
+        if (checkCommand(input[0],"clear")){
             //with no arg u just delete one message above
             if (input.length < 2) {
                 deleteMessages(event.getChannel(), 2); //2 because amount hast to be between 2 and 100

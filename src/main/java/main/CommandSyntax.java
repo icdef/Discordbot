@@ -5,23 +5,23 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.AudioManager;
 
 
-public abstract class Commandsyntax extends ListenerAdapter {
+public abstract class CommandSyntax extends ListenerAdapter {
     //command prefix
-    public char PREFIX = '!';
+    public final char PREFIX = '!';
 
-    public boolean checkcommand(String input,String command){
+    public boolean checkCommand(String input, String command){
         return input.compareTo(PREFIX+command) == 0;
     }
 
     /**
-     * checks if event got triggerd by bot or if bot is in a voice channel
+     * checks if event got triggered by bot or if bot is in a voice channel
      * @param event
      * @param audioManager
      * @return boolean
      */
-    public boolean IsBotInChannel(GuildMessageReceivedEvent event, AudioManager audioManager){
+    public boolean IsBotInVoiceChannel(GuildMessageReceivedEvent event, AudioManager audioManager){
 
-        //checks if event got triggerd by bot
+        //checks if event got triggered by bot
         if (event.getAuthor().isBot())
             return true;
         //checks if bot is in a voice channel
