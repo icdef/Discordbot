@@ -1,3 +1,3 @@
 # Discordbot
-A Discord msuic bot with some extras
+A Discord music bot with some extras
 
