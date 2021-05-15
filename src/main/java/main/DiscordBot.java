@@ -23,7 +23,7 @@ public class DiscordBot {
                 , new DateCommand(), new ClearCommand(), new MuteCommand(), new UnmuteCommand(), new JoinCommand(), new LeaveCommand(), new StopCommand(),
                 new SkipCommand(), new PlayCommand(), new ShuffleCommand(), new PauseCommand(), new MusicReactionController()};
 
-        JDABuilder jdaBuilder = JDABuilder.createDefault("Njc1MzA5Mjc3MTUzMzI5MTUy.Xj1Qxg.n9K0DsIBAucKek7jqHYAFz7cKN4");
+        JDABuilder jdaBuilder = JDABuilder.createDefault("");
         JDA jda = jdaBuilder.build();
         Thread t1 = new Thread(new Shut(jda));
         t1.start();
