@@ -5,6 +5,7 @@ import music.GuildMusicManager;
 import music.PlayerManager;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.managers.AudioManager;
+import utils.BotUtility;
 
 import javax.annotation.Nonnull;
 
@@ -16,7 +17,7 @@ public class StopCommand extends CommandSyntax {
 
         AudioManager audioManager = event.getGuild().getAudioManager();
 
-        if(IsBotInVoiceChannel(event,audioManager))return;
+        if(BotUtility.IsBotInVoiceChannel(event,audioManager))return;
         PlayerManager playerManager = PlayerManager.getInstance(event.getChannel());
         GuildMusicManager guildMusicManager = playerManager.getMusicManager(event.getGuild());
         guildMusicManager.scheduler.getQueue().clear();

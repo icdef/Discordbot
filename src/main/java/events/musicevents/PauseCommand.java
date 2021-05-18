@@ -5,6 +5,7 @@ import music.PlayerManager;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.managers.AudioManager;
+import utils.BotUtility;
 
 import javax.annotation.Nonnull;
 
@@ -16,7 +17,7 @@ public class PauseCommand extends CommandSyntax {
         TextChannel channel = event.getChannel();
         AudioManager audioManager = event.getGuild().getAudioManager();
 
-        if(IsBotInVoiceChannel(event,audioManager))return;
+        if(BotUtility.IsBotInVoiceChannel(event,audioManager))return;
 
         PlayerManager playerManager = PlayerManager.getInstance(channel);
         GuildMusicManager guildMusicManager = playerManager.getMusicManager(event.getGuild());

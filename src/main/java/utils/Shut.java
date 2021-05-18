@@ -1,4 +1,4 @@
-package main;
+package utils;
 
 import net.dv8tion.jda.api.JDA;
 
@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 /**
  * Thread which listens to System.in and shuts down the bot when writing 'exit' into console
  */
-class Shut implements Runnable {
+public class Shut implements Runnable {
     private JDA jda;
 
     public Shut(JDA jda) {

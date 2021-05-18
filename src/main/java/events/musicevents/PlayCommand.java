@@ -40,7 +40,6 @@ public class PlayCommand extends CommandSyntax {
 
         if(!audioManager.isConnected()) {
             audioManager.openAudioConnection(channel);
-            event.getChannel().sendMessage("Joining your voice channel").queue();
         }
 
         PlayerManager manager = PlayerManager.getInstance(event.getChannel());

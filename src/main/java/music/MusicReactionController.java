@@ -28,14 +28,18 @@ public class MusicReactionController extends ListenerAdapter {
                     guildMusicManager.player.setPaused(!guildMusicManager.player.isPaused());
                     break;
                 case "U+23ED":
-                    guildMusicManager.scheduler.nextTrack(true);
+                    guildMusicManager.scheduler.nextTrack();
                     break;
                 case "U+1F500":
                     guildMusicManager.scheduler.shuffleQueue();
                     break;
                 case "U+23F9":
-                    playMessages.pop().clearReactions().queue();
+                    playMessages.pop().delete().queue();
                     guildMusicManager.scheduler.stopAndReset();
+                    break;
+                case "U+23CF":
+                    playMessages.pop().delete().queue();
+                    event.getGuild().getAudioManager().closeAudioConnection();
                     break;
 
             }

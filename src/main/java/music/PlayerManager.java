@@ -8,19 +8,21 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
+import com.sedmelluq.discord.lavaplayer.track.BasicAudioPlaylist;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import utils.BotUtility;
 
 import java.util.*;
 
 
 public class PlayerManager {
     private static PlayerManager INSTANCE;
-    private AudioPlayerManager audioPlayerManager;
+    private final AudioPlayerManager audioPlayerManager;
     private TextChannel channel;
-    private Map<Long,GuildMusicManager> musicManagers;
-    private Deque<Message> playMessages = new ArrayDeque<>();
+    private final Map<Long,GuildMusicManager> musicManagers;
+    private final Deque<Message> playMessages = new ArrayDeque<>();
 
 
     private PlayerManager(TextChannel channel){
@@ -49,6 +51,8 @@ public class PlayerManager {
 
     public void loadandPlay(TextChannel channel, String trackUrl){
         GuildMusicManager musicManager = getMusicManager(channel.getGuild());
+        // default playlist list
+
         audioPlayerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
 
             @Override
@@ -58,11 +62,15 @@ public class PlayerManager {
 
             @Override
             public void playlistLoaded(AudioPlaylist audioPlaylist) {
-                boolean once = true;
+                boolean isDefaultPlaylist = BotUtility.isAutoShufflePlaylist(trackUrl);
+                boolean preventSpammingOfMessage = true;
                 List<AudioTrack> audioTrackList = audioPlaylist.getTracks();
+                if (isDefaultPlaylist) {
+                    Collections.shuffle(audioTrackList);
+                }
                 for (AudioTrack track : audioTrackList){
-                    musicManager.scheduler.queuePlaylist(track,audioPlaylist, once);
-                    once = false;
+                    musicManager.scheduler.queuePlaylist(track,audioPlaylist, preventSpammingOfMessage);
+                    preventSpammingOfMessage = false;
                 }
 
             }
