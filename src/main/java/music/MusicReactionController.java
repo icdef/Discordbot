@@ -15,15 +15,17 @@ public class MusicReactionController extends ListenerAdapter {
     @Override
     public void onMessageReactionAdd(@Nonnull MessageReactionAddEvent event){
         PlayerManager manager = PlayerManager.getInstance(event.getTextChannel());
-        Deque<Message> playMessages= manager.getPlayMessages();
+        Deque<Message> playMessages = manager.getPlayMessages();
         GuildMusicManager guildMusicManager = manager.getMusicManager(event.getGuild());
         if (Objects.requireNonNull(event.getUser()).isBot())
             return;
         if (playMessages.peek() == null)
             return;
-        if (playMessages.peek().getIdLong() == event.getMessageIdLong()){
+        if (!playMessages.peek().getAuthor().isBot())
+            return;
+        if (playMessages.peek().getIdLong() == event.getMessageIdLong()) {
 
-            switch (event.getReaction().getReactionEmote().getAsCodepoints().toUpperCase()){
+            switch (event.getReaction().getReactionEmote().getAsCodepoints().toUpperCase()) {
                 case "U+23EF":
                     guildMusicManager.player.setPaused(!guildMusicManager.player.isPaused());
                     break;

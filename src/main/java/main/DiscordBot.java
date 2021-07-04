@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import utils.Shut;
 
+import javax.security.auth.login.LoginException;
 import java.util.ArrayList;
 
 /**
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 public class DiscordBot {
 
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws LoginException {
         ArrayList<AllCommands> COMMANDS = new ArrayList<>();
         ListenerAdapter[] adapters = {new HelloThere(), new OnlineCommand(), new CommandNotFound(COMMANDS), new HelpCommand(COMMANDS)
                 , new DateCommand(), new ClearCommand(), new MuteCommand(), new UnmuteCommand(), new JoinCommand(), new LeaveCommand(), new StopCommand(),
@@ -26,6 +27,7 @@ public class DiscordBot {
 
         JDABuilder jdaBuilder = JDABuilder.createDefault("");
         JDA jda = jdaBuilder.build();
+        System.out.println("Bot is on");
         Thread t1 = new Thread(new Shut(jda));
         t1.start();
         for (ListenerAdapter listenerAdapters : adapters) {

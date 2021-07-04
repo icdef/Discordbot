@@ -18,7 +18,6 @@ public class Shut implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Bot is on");
         String line = "";
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         try {
